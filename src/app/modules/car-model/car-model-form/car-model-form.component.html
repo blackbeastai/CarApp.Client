@@ -1,0 +1,177 @@
+<div class="page-wrapper">
+
+    <!-- Header -->
+    <div class="page-header">
+        <h2>{{ isEditMode ? 'Edit Car Model' : 'Add New Car Model' }}</h2>
+        <button class="btn-secondary" (click)="onCancel()">
+            Back to List
+        </button>
+    </div>
+
+    <form [formGroup]= "carModelForm" (ngSubmit)="onSubmit()">
+        <div class="form-card">
+
+            <div class="form-row">
+
+                <!-- Brand -->
+                <div class="form-group">
+                    <label>Brand <span class="required">*</span></label>
+                    <select formControlName="brandId" [class.is-invalid]="f['brandId'].invalid && 
+                                       f['brandId'].touched">
+                        <option value="">Select Brand</option>
+                        <option *ngFor="let brand of brands" [value]="brand.id">
+                            {{ brand.name }}
+                        </option>
+                    </select>
+                    <div class="error-msg" *ngIf="f['brandId'].invalid && f['brandId'].touched">
+                        Brand is required
+                    </div>
+                </div>
+
+                <!-- Class -->
+                <div class="form-group">
+                    <label>Class <span class="required">*</span></label>
+                    <select formControlName="classId" [class.is-invalid]="f['classId'].invalid && 
+                                       f['classId'].touched">
+                        <option value="">Select Class</option>
+                        <option *ngFor="let carClass of carClasses" [value]="carClass.id">
+                            {{ carClass.name }}
+                        </option>
+                    </select>
+                    <div class="error-msg" *ngIf="f['classId'].invalid && f['classId'].touched">
+                        Class is required
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="form-row">
+
+                <!-- Model Name -->
+                <div class="form-group">
+                    <label>Model Name <span class="required">*</span></label>
+                    <input type="text" formControlName="modelName" placeholder="Enter model name" [class.is-invalid]="f['modelName'].invalid && 
+                                      f['modelName'].touched" />
+                    <div class="error-msg" *ngIf="f['modelName'].invalid && f['modelName'].touched">
+                        Model name is required
+                    </div>
+                </div>
+
+                <!-- Model Code -->
+                <div class="form-group">
+                    <label>Model Code <span class="required">*</span>
+                        <small>(10 alphanumeric only)</small>
+                    </label>
+                    <input type="text" formControlName="modelCode" appAlphanumeric placeholder="e.g. AUD1234567" maxlength="10"
+                        [class.is-invalid]="f['modelCode'].invalid && 
+                                      f['modelCode'].touched" />
+                    <div class="error-msg" *ngIf="f['modelCode'].invalid && f['modelCode'].touched">
+                        <span *ngIf="f['modelCode'].errors?.['required']">
+                            Model code is required
+                        </span>
+                        <span *ngIf="f['modelCode'].errors?.['pattern']">
+                            Only alphanumeric characters allowed (max 10)
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="form-row">
+
+                <!-- Price -->
+                <div class="form-group">
+                    <label>Price <span class="required">*</span></label>
+                    <input type="number" formControlName="price" placeholder="Enter price" [class.is-invalid]="f['price'].invalid && 
+                                      f['price'].touched" />
+                    <div class="error-msg" *ngIf="f['price'].invalid && f['price'].touched">
+                        Valid price is required
+                    </div>
+                </div>
+
+                <!-- Date of Manufacturing -->
+                <div class="form-group">
+                    <label>Date of Manufacturing
+                        <span class="required">*</span>
+                    </label>
+                    <input type="date" formControlName="dateOfManufacturing" [class.is-invalid]="f['dateOfManufacturing'].invalid && 
+                                      f['dateOfManufacturing'].touched" />
+                    <div class="error-msg" *ngIf="f['dateOfManufacturing'].invalid && 
+                       f['dateOfManufacturing'].touched">
+                        Date is required
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Description -->
+            <div class="form-group">
+                <label>Description <span class="required">*</span></label>
+                <textarea formControlName="description" rows="4" placeholder="Enter description" [class.is-invalid]="f['description'].invalid && 
+                                       f['description'].touched">
+        </textarea>
+                <div class="error-msg" *ngIf="f['description'].invalid && 
+                     f['description'].touched">
+                    Description is required
+                </div>
+            </div>
+
+            <!-- Features -->
+            <div class="form-group">
+                <label>Features <span class="required">*</span></label>
+                <textarea formControlName="features" rows="4" placeholder="Enter features" [class.is-invalid]="f['features'].invalid && 
+                                       f['features'].touched">
+        </textarea>
+                <div class="error-msg" *ngIf="f['features'].invalid && f['features'].touched">
+                    Features is required
+                </div>
+            </div>
+
+            <div class="form-row">
+
+                <!-- Sort Order -->
+                <div class="form-group">
+                    <label>Sort Order</label>
+                    <input type="number" formControlName="sortOrder" placeholder="0" />
+                </div>
+
+                <!-- Active -->
+                <div class="form-group checkbox-group">
+                    <label>
+                        <input type="checkbox" formControlName="isActive" />
+                        Active
+                    </label>
+                </div>
+
+            </div>
+
+            <!-- Image Upload -->
+            <div class="form-group">
+                <label>Images
+                    <small>(max 5MB each, multiple allowed)</small>
+                </label>
+                <input type="file" multiple accept="image/*" (change)="onFileSelect($event)" />
+
+                <!-- Image Previews -->
+                <div class="image-preview-grid" *ngIf="previewUrls.length > 0">
+                    <div class="preview-item" *ngFor="let url of previewUrls; let i = index">
+                        <img [src]="url" alt="Preview" />
+                        <button type="button" class="remove-img" (click)="removeImage(i)">×</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit -->
+            <div class="form-actions">
+                <button type="button" class="btn-secondary" (click)="onCancel()">
+                    Cancel
+                </button>
+                <button type="submit" class="btn-primary" [disabled]="isLoading">
+                    {{ isLoading ? 'Saving...' : (isEditMode ? 'Update' : 'Create') }}
+                </button>
+            </div>
+
+        </div>
+    </form>
+
+</div>

@@ -1,0 +1,63 @@
+<div class="page-wrapper">
+
+    <!-- Header -->
+    <div class="page-header">
+        <h2>Car Models</h2>
+        <button class="btn-primary" (click)="onAdd()">
+            + Add New Model
+        </button>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="search-bar">
+        <input type="text" placeholder="Search by model name..." [(ngModel)]="searchName" />
+        <input type="text" placeholder="Search by model code..." [(ngModel)]="searchCode" />
+        <button class="btn-search" (click)="onSearch()">Search</button>
+        <button class="btn-clear" (click)="onClear()">Clear</button>
+    </div>
+
+    <!-- Loading -->
+    <div class="loading" *ngIf="isLoading">Loading...</div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="!isLoading && carModels.length === 0">
+        No car models found.
+    </div>
+
+    <!-- Grid -->
+    <div class="car-grid" *ngIf="!isLoading && carModels.length > 0">
+        <div class="car-card" *ngFor="let car of carModels">
+
+            <!-- Thumbnail -->
+            <div class="car-image">
+                <img [src]="getImageUrl(car.defaultImagePath)" [alt]="car.modelName"
+                    onerror="this.src='assets/no-image.png'" />
+            </div>
+
+            <!-- Info -->
+            <div class="car-info">
+                <div class="car-brand">
+                    <span class="badge">{{ car.brandName }}</span>
+                    <span class="badge class">{{ car.className }}</span>
+                </div>
+                <h3>{{ car.modelName }}</h3>
+                <p class="model-code">Code: {{ car.modelCode }}</p>
+                <p class="price">${{ car.price | number }}</p>
+                <p class="date">
+                    {{ car.dateOfManufacturing | date:'mediumDate' }}
+                </p>
+                <span class="status" [class.active]="car.isActive" [class.inactive]="!car.isActive">
+                    {{ car.isActive ? 'Active' : 'Inactive' }}
+                </span>
+            </div>
+
+            <!-- Actions -->
+            <div class="car-actions">
+                <button class="btn-edit" (click)="onEdit(car.id)">Edit</button>
+                <button class="btn-delete" (click)="onDelete(car.id)">Delete</button>
+            </div>
+
+        </div>
+    </div>
+
+</div>

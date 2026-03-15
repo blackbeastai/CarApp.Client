@@ -1,0 +1,21 @@
+<nav class="navbar">
+  <div class="navbar-brand">
+    CarApp
+  </div>
+
+  <div class="navbar-menu">
+    <a *ngFor="let item of visibleItems"
+       [routerLink]="item.route"
+       routerLinkActive="active"
+       class="nav-link">
+      {{ item.label }}
+    </a>
+  </div>
+
+  <div class="navbar-user">
+    <span class="username">{{ username }}</span>
+    <button class="btn-logout" (click)="logout()">
+      Logout
+    </button>
+  </div>
+</nav>

@@ -1,0 +1,88 @@
+<div class="page-wrapper">
+  <div class="page-header">
+    <h2>Commission Report</h2>
+  </div>
+
+  <div class="loading" *ngIf="isLoading">Loading...</div>
+
+  <div class="content" *ngIf="!isLoading">
+
+    <!-- Salesman Cards -->
+    <div class="salesman-tabs">
+      <div class="salesman-card"
+           *ngFor="let report of reports"
+           [class.active]="selected === report"
+           (click)="selectSalesman(report)">
+        <h3>{{ report.salesmanName }}</h3>
+        <p class="total">
+          ${{ report.totalCommission | number:'1.2-2' }}
+        </p>
+        <small>Total Commission</small>
+      </div>
+    </div>
+
+    <!-- Detail -->
+    <div class="detail-card" *ngIf="selected">
+
+      <!-- Summary -->
+      <div class="summary-grid">
+        <div class="summary-item">
+          <span class="label">Total Sales</span>
+          <span class="value">
+            ${{ selected.totalSalesAmount | number:'1.2-2' }}
+          </span>
+        </div>
+        <div class="summary-item">
+          <span class="label">Fixed Commission</span>
+          <span class="value">
+            ${{ selected.fixedCommission | number:'1.2-2' }}
+          </span>
+        </div>
+        <div class="summary-item">
+          <span class="label">Class Commission</span>
+          <span class="value">
+            ${{ selected.classCommission | number:'1.2-2' }}
+          </span>
+        </div>
+        <div class="summary-item bonus">
+          <span class="label">Bonus (2% Class A)</span>
+          <span class="value">
+            ${{ selected.bonusCommission | number:'1.2-2' }}
+          </span>
+        </div>
+        <div class="summary-item total">
+          <span class="label">Total Commission</span>
+          <span class="value">
+            ${{ selected.totalCommission | number:'1.2-2' }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Line Details -->
+      <table class="detail-table">
+        <thead>
+          <tr>
+            <th>Brand</th>
+            <th>Class</th>
+            <th>Units</th>
+            <th>Model Price</th>
+            <th>Fixed</th>
+            <th>Class %</th>
+            <th>Line Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let line of selected.lines">
+            <td>{{ line.brandName }}</td>
+            <td>{{ line.className }}</td>
+            <td>{{ line.unitsSold }}</td>
+            <td>${{ line.modelPrice | number:'1.2-2' }}</td>
+            <td>${{ line.fixedCommission | number:'1.2-2' }}</td>
+            <td>${{ line.classCommission | number:'1.2-2' }}</td>
+            <td>${{ line.lineTotal | number:'1.2-2' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
